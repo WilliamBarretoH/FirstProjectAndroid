@@ -14,7 +14,21 @@ public class EmployeeDao {
         return (List<Employee>) employees.clone();
     }
 
-    public void addEmployee(Employee... employees){
+    public void addEmployee(Employee employees){
         EmployeeDao.employees.addAll(Arrays.asList(employees));
+    }
+
+    public void editEmployee(int position, Employee employee){
+        employees.set(position, employee);
+    }
+
+    public void removeEmployee(int position){
+        employees.remove(position);
+    }
+
+    private Employee getEmployeeById(Employee employee){
+        for (Employee e: employees) {
+            if(e.getId() == employee.getId()) return e;
+        }return null;
     }
 }

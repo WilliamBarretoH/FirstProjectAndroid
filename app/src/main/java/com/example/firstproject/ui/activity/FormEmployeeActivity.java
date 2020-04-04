@@ -20,12 +20,14 @@ public class FormEmployeeActivity extends AppCompatActivity {
     private EditText fieldSalary;
     private EmployeeDao employeeDao;
     private Employee employee;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_employee);
-        initializeFields();
+        initializeViews();
+        fillEmployee();
 
     }
 
@@ -39,35 +41,55 @@ public class FormEmployeeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if(itemId == R.id.activity_form_save_employee_menu){
-            EditText name = findViewById(R.id.activity_form_employee_name);
-            EditText age = findViewById(R.id.activity_form_employee_age);
-            EditText salary = findViewById(R.id.activity_form_employee_salary);
-
-            Employee employeeCreate = new Employee(name.getText().toString(),
-                    age.getText().toString(), salary.getText().toString());
-            new EmployeeDao().addEmployee(employeeCreate);
-
-            Intent resultInserction = new Intent();
-            resultInserction.putExtra("employeeExtra", employeeCreate);
-
+            saveAndPutEmployee();
             finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void fillEmployee() {
-        String name = fieldName.getText().toString();
-        String age = fieldAge.getText().toString();
-        String salary = fieldSalary.getText().toString();
+    private void saveAndPutEmployee() {
 
-        employee.setName(name);
-        employee.setAge(age);
-        employee.setSalary(salary);
+        Employee employeeCreated = createEmployee();
+        returnEmployee(employeeCreated);
+
+
+    }
+
+    private void returnEmployee(Employee employee) {
+        Intent resultInserction = new Intent();
+        resultInserction.putExtra("employee", employee);
+        resultInserction.putExtra("position",position);
+        setResult(2, resultInserction);
+    }
+
+    private Employee createEmployee() {
+        return new Employee(fieldName.getText().toString(),
+                    fieldAge.getText().toString(), fieldSalary.getText().toString());
+    }
+
+    private void fillEmployee() {
+        Intent employeeData = getIntent();
+        if(employeeData.hasExtra("employee")){
+            employee = (Employee) employeeData.getSerializableExtra("employee");
+            position = employeeData.getIntExtra("position", position);
+            setTitle("Edit Employee");
+            setTextsEmployee();
+
+        }else{
+            setTitle("New Employee");
+            employee = new Employee();
+        }
+    }
+
+    private void setTextsEmployee() {
+        fieldName.setText(employee.getName());
+        fieldAge.setText(employee.getAge());
+        fieldSalary.setText(employee.getSalary());
     }
 
 
-    private void initializeFields(){
+    private void initializeViews(){
         fieldName = findViewById(R.id.activity_form_employee_name);
         fieldAge = findViewById(R.id.activity_form_employee_age);
         fieldSalary = findViewById(R.id.activity_form_employee_salary);

@@ -3,7 +3,9 @@ package com.example.firstproject.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +17,7 @@ import com.example.firstproject.ui.recycler.adapter.ListEmployeAdapter;
 import com.example.firstproject.ui.recycler.adapter.listener.OnItemClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class ListEmployeesActivity extends AppCompatActivity {
@@ -36,10 +39,6 @@ public class ListEmployeesActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        EmployeeDao dao = new EmployeeDao();
-        allEmployees.clear();
-        allEmployees.addAll(dao.listEmployees());
-        adapter.notifyDataSetChanged();
         super.onResume();
     }
 
@@ -67,11 +66,14 @@ public class ListEmployeesActivity extends AppCompatActivity {
         recyclerEmployees.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick() {
-                Intent goDetailsEmployee = new Intent(ListEmployeesActivity.this,
+            public void onItemClick(Employee employee, int position) {
+                Intent startDetailsEmployeeActivityWithEmployeeData = new Intent(ListEmployeesActivity.this,
                         DetailsEmployeeActivity.class);
-                startActivity(goDetailsEmployee);
+                startDetailsEmployeeActivityWithEmployeeData.putExtra("employee", employee);
+                startDetailsEmployeeActivityWithEmployeeData.putExtra("position", position);
+                startActivityForResult(startDetailsEmployeeActivityWithEmployeeData, 2);
             }
+
         });
     }
 
@@ -87,6 +89,24 @@ public class ListEmployeesActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == 1 && resultCode == 2 && data.hasExtra("employee")){
+            Employee employeeData = (Employee) data.getSerializableExtra("employee");
+            new EmployeeDao().addEmployee(employeeData);
+            adapter.setEmployeeList(employeeData);
+        }
 
+        if(requestCode == 2 && resultCode == 2 && data.hasExtra("employee") && data.hasExtra("position")){
+            Employee employeeRec = (Employee) data.getSerializableExtra("employee");
+            int positionRec = data.getIntExtra("position", -1);
+            new EmployeeDao().editEmployee(positionRec, employeeRec);
+            adapter.edit(positionRec, employeeRec);
+            Toast.makeText(this, ""+employeeRec.getName(), Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
 }

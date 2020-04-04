@@ -1,5 +1,7 @@
 package com.example.firstproject.model.entity;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class Employee implements Serializable {
@@ -50,5 +52,15 @@ public class Employee implements Serializable {
 
     public void setSalary(String salary) {
         this.salary = salary;
+    }
+
+    public boolean validId(){
+        return id > 0;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return getName();
     }
 }

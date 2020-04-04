@@ -49,10 +49,19 @@ public class ListEmployeAdapter extends RecyclerView.Adapter <ListEmployeAdapter
         return employees.size();
     }
 
+    public void edit(int position, Employee employee) {
+        employees.set(position,employee);
+        notifyDataSetChanged();
+    }
+
+    public void remove(int position){
+        employees.remove(position);
+    }
+
     class EmployeeViewHolder extends RecyclerView.ViewHolder{
 
         private TextView name;
-
+        private Employee employee;
 
         public EmployeeViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,12 +71,13 @@ public class ListEmployeAdapter extends RecyclerView.Adapter <ListEmployeAdapter
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onItemClickListener.onItemClick();
+                    onItemClickListener.onItemClick(employee, getAdapterPosition());
                 }
             });
         }
 
         public void vincula(Employee employee){
+            this.employee = employee;
             preencheCampo(employee);
         }
 
@@ -77,4 +87,14 @@ public class ListEmployeAdapter extends RecyclerView.Adapter <ListEmployeAdapter
 
 
     }
+
+    public void setEmployeeList(Employee employee){
+        employees.add(employee);
+        notifyDataSetChanged();
+    }
+
+    public void editEmployeeList(int position, Employee employee){
+
+    }
+
 }
