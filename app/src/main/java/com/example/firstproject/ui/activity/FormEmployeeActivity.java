@@ -49,7 +49,6 @@ public class FormEmployeeActivity extends AppCompatActivity {
     }
 
     private void saveAndPutEmployee() {
-
         Employee employeeCreated = createEmployee();
         returnEmployee(employeeCreated);
 

@@ -1,17 +1,23 @@
 package com.example.firstproject.model.entity;
 
 import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
+@Entity
 public class Employee implements Serializable {
 
+    @PrimaryKey(autoGenerate = true)
     private  int id = 0;
 
     private String name;
     private String age;
     private String salary;
 
+    @Ignore
     public Employee(String name, String age, String salary) {
         this.name = name;
         this.age = age;

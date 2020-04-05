@@ -7,8 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.firstproject.R;
 import com.example.firstproject.model.dao.EmployeeDao;
@@ -46,7 +48,7 @@ public class DetailsEmployeeActivity extends AppCompatActivity {
             position = data.getIntExtra("position", -1);
             fillsFields();
             returnEmployee();
-            finish();
+            //finish();
         }
     }
 
@@ -99,7 +101,10 @@ public class DetailsEmployeeActivity extends AppCompatActivity {
         removeEmployeeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 verifyRemoveEmployee(position, employee);
+                Log.i("esse e o ", "employee: " + employee.getName());
+
 
             }
         });
@@ -112,11 +117,11 @@ public class DetailsEmployeeActivity extends AppCompatActivity {
                 .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent employeeData = new Intent();
-                        Employee employeeRec = (Employee) employeeData.getSerializableExtra("employee");
-                        int positionRec = employeeData.getIntExtra("position", -1);
-                        adapter.edit(positionRec, employeeRec);
-                        new EmployeeDao().editEmployee(positionRec, employeeRec);
+                        Toast.makeText(DetailsEmployeeActivity.this, "Employee: " + employee.getName()
+                                + "Position: " + position, Toast.LENGTH_SHORT).show();
+                        new EmployeeDao().removeEmployee(position, employee);
+                        adapter.delete(position);
+                        finish();
                     }
                 })
                 .setNegativeButton("Não", null)

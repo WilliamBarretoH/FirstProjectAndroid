@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.firstproject.R;
+import com.example.firstproject.asyncTask.CreateEmployeeTask;
+import com.example.firstproject.database.EmployeeDatabase;
+import com.example.firstproject.database.dao.EmployeeDaoRoom;
 import com.example.firstproject.model.dao.EmployeeDao;
 import com.example.firstproject.model.entity.Employee;
 import com.example.firstproject.ui.recycler.adapter.ListEmployeAdapter;
@@ -26,11 +29,16 @@ public class ListEmployeesActivity extends AppCompatActivity {
     private ListEmployeAdapter adapter;
     private EmployeeDao employeeDao;
     private List<Employee> allEmployees;
+    private EmployeeDaoRoom employeeDaoRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_employees);
+
+        EmployeeDatabase employeeDatabase = EmployeeDatabase.getInstance(this);
+        employeeDaoRoom = employeeDatabase.getEmployeeDao();
+
         setUpButtonNewEmployee();
         allEmployees = employeeExample();
         setUpRecyclerView(allEmployees);
@@ -42,9 +50,13 @@ public class ListEmployeesActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    private List<Employee> getEmployees(){
+        return null;
+    }
+
     private List<Employee> employeeExample() {
         EmployeeDao employeeDao = new EmployeeDao();
-        employeeDao.addEmployee(new Employee("William","20","1500"));
+        //employeeDao.addEmployee(new Employee("William","20","1500"));
 
         return employeeDao.listEmployees();
     }
@@ -93,9 +105,11 @@ public class ListEmployeesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        //verificando o resultado do Form para criar um funcionario -employee
         if(requestCode == 1 && resultCode == 2 && data.hasExtra("employee")){
             Employee employeeData = (Employee) data.getSerializableExtra("employee");
             new EmployeeDao().addEmployee(employeeData);
+            //new CreateEmployeeTask(adapter, employeeData, employeeDaoRoom).execute();
             adapter.setEmployeeList(employeeData);
         }
 

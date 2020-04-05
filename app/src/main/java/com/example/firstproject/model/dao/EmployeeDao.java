@@ -22,8 +22,8 @@ public class EmployeeDao {
         employees.set(position, employee);
     }
 
-    public void removeEmployee(int position){
-        employees.remove(position);
+    public void removeEmployee(int position, Employee employee){
+        employees.remove(employee);
     }
 
     private Employee getEmployeeById(Employee employee){

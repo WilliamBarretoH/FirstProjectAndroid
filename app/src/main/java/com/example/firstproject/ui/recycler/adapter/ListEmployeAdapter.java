@@ -1,17 +1,20 @@
 package com.example.firstproject.ui.recycler.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.firstproject.R;
 import com.example.firstproject.model.entity.Employee;
 import com.example.firstproject.ui.recycler.adapter.listener.OnItemClickListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -54,8 +57,10 @@ public class ListEmployeAdapter extends RecyclerView.Adapter <ListEmployeAdapter
         notifyDataSetChanged();
     }
 
-    public void remove(int position){
+    public void delete(int position){
         employees.remove(position);
+        notifyItemRemoved(position);
+        Log.i("", "delete: position" + position);
     }
 
     class EmployeeViewHolder extends RecyclerView.ViewHolder{
@@ -84,7 +89,6 @@ public class ListEmployeAdapter extends RecyclerView.Adapter <ListEmployeAdapter
         private void preencheCampo(Employee employee) {
             name.setText(employee.getName());
         }
-
 
     }
 
