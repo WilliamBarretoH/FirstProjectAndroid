@@ -13,6 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firstproject.R;
+import com.example.firstproject.asyncTask.CreateEmployeeTask;
+import com.example.firstproject.asyncTask.RemoveEmployeeTask;
+import com.example.firstproject.asyncTask.UpdateEmployeeTask;
+import com.example.firstproject.database.EmployeeDatabase;
+import com.example.firstproject.database.dao.EmployeeDaoRoom;
 import com.example.firstproject.model.dao.EmployeeDao;
 import com.example.firstproject.model.entity.Employee;
 import com.example.firstproject.ui.recycler.adapter.ListEmployeAdapter;
@@ -28,11 +33,16 @@ public class DetailsEmployeeActivity extends AppCompatActivity {
     private Employee employee;
     private int position;
     private ListEmployeAdapter adapter;
+    private EmployeeDaoRoom employeeDaoRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_employee);
+        setTitle("Details");
+        EmployeeDatabase employeeDatabase = EmployeeDatabase.getInstance(this);
+        employeeDaoRoom = employeeDatabase.getEmployeeDao();
+
         fillsViews();
         setUpEditEmployeeButton();
         setUpRemoveEmployeeButton();
@@ -48,6 +58,7 @@ public class DetailsEmployeeActivity extends AppCompatActivity {
             position = data.getIntExtra("position", -1);
             fillsFields();
             returnEmployee();
+
             //finish();
         }
     }
@@ -70,9 +81,9 @@ public class DetailsEmployeeActivity extends AppCompatActivity {
     }
 
     private void fillsFields() {
-        fieldName.setText(employee.getName());
-        fieldAge.setText(employee.getAge());
-        fieldSalary.setText(employee.getSalary());
+        fieldName.setText( employee.getName());
+        fieldAge.setText( employee.getAge());
+        fieldSalary.setText( employee.getSalary());
     }
 
     private void fillsViews() {
@@ -101,10 +112,7 @@ public class DetailsEmployeeActivity extends AppCompatActivity {
         removeEmployeeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 verifyRemoveEmployee(position, employee);
-                Log.i("esse e o ", "employee: " + employee.getName());
-
 
             }
         });
@@ -112,19 +120,16 @@ public class DetailsEmployeeActivity extends AppCompatActivity {
 
     private void verifyRemoveEmployee(final int position, final Employee employee) {
         new AlertDialog.Builder(this)
-                .setTitle("Deletando aluno")
-                .setMessage("Tem certeza que deseja deletar o aluno")
-                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                .setTitle("Deleting employee")
+                .setMessage("Confirm remove of " + employee.getName())
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(DetailsEmployeeActivity.this, "Employee: " + employee.getName()
-                                + "Position: " + position, Toast.LENGTH_SHORT).show();
-                        new EmployeeDao().removeEmployee(position, employee);
-                        adapter.delete(position);
+                        new RemoveEmployeeTask(adapter, employee, employeeDaoRoom).execute();
                         finish();
                     }
                 })
-                .setNegativeButton("Não", null)
+                .setNegativeButton("No", null)
                 .show();
 
     }

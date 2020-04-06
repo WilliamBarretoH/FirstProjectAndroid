@@ -2,6 +2,7 @@ package com.example.firstproject.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.firstproject.R;
 import com.example.firstproject.asyncTask.CreateEmployeeTask;
+import com.example.firstproject.asyncTask.ListingEmployeesTask;
+import com.example.firstproject.asyncTask.UpdateEmployeeTask;
 import com.example.firstproject.database.EmployeeDatabase;
 import com.example.firstproject.database.dao.EmployeeDaoRoom;
 import com.example.firstproject.model.dao.EmployeeDao;
@@ -20,7 +23,6 @@ import com.example.firstproject.ui.recycler.adapter.ListEmployeAdapter;
 import com.example.firstproject.ui.recycler.adapter.listener.OnItemClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class ListEmployeesActivity extends AppCompatActivity {
@@ -35,12 +37,12 @@ public class ListEmployeesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_employees);
-
+        setTitle("Employees");
         EmployeeDatabase employeeDatabase = EmployeeDatabase.getInstance(this);
         employeeDaoRoom = employeeDatabase.getEmployeeDao();
 
         setUpButtonNewEmployee();
-        allEmployees = employeeExample();
+        allEmployees = listingEmployees();
         setUpRecyclerView(allEmployees);
 
     }
@@ -48,13 +50,15 @@ public class ListEmployeesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getEmployees();
     }
 
-    private List<Employee> getEmployees(){
-        return null;
+    private void getEmployees(){
+        new ListingEmployeesTask(employeeDaoRoom, adapter).execute();
+
     }
 
-    private List<Employee> employeeExample() {
+    private List<Employee> listingEmployees() {
         EmployeeDao employeeDao = new EmployeeDao();
         //employeeDao.addEmployee(new Employee("William","20","1500"));
 
@@ -81,6 +85,7 @@ public class ListEmployeesActivity extends AppCompatActivity {
             public void onItemClick(Employee employee, int position) {
                 Intent startDetailsEmployeeActivityWithEmployeeData = new Intent(ListEmployeesActivity.this,
                         DetailsEmployeeActivity.class);
+                Log.i("TAG", "onItemClick: " + employee.getId());
                 startDetailsEmployeeActivityWithEmployeeData.putExtra("employee", employee);
                 startDetailsEmployeeActivityWithEmployeeData.putExtra("position", position);
                 startActivityForResult(startDetailsEmployeeActivityWithEmployeeData, 2);
@@ -108,18 +113,13 @@ public class ListEmployeesActivity extends AppCompatActivity {
         //verificando o resultado do Form para criar um funcionario -employee
         if(requestCode == 1 && resultCode == 2 && data.hasExtra("employee")){
             Employee employeeData = (Employee) data.getSerializableExtra("employee");
-            new EmployeeDao().addEmployee(employeeData);
-            //new CreateEmployeeTask(adapter, employeeData, employeeDaoRoom).execute();
-            adapter.setEmployeeList(employeeData);
+            new CreateEmployeeTask(adapter, employeeData, employeeDaoRoom).execute();
         }
 
         if(requestCode == 2 && resultCode == 2 && data.hasExtra("employee") && data.hasExtra("position")){
             Employee employeeRec = (Employee) data.getSerializableExtra("employee");
             int positionRec = data.getIntExtra("position", -1);
-            new EmployeeDao().editEmployee(positionRec, employeeRec);
-            adapter.edit(positionRec, employeeRec);
-            Toast.makeText(this, ""+employeeRec.getName(), Toast.LENGTH_SHORT).show();
-
+            new UpdateEmployeeTask(positionRec, employeeDaoRoom, employeeRec, adapter).execute();
         }
 
     }

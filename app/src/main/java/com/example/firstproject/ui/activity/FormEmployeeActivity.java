@@ -62,11 +62,6 @@ public class FormEmployeeActivity extends AppCompatActivity {
         setResult(2, resultInserction);
     }
 
-    private Employee createEmployee() {
-        return new Employee(fieldName.getText().toString(),
-                    fieldAge.getText().toString(), fieldSalary.getText().toString());
-    }
-
     private void fillEmployee() {
         Intent employeeData = getIntent();
         if(employeeData.hasExtra("employee")){
@@ -79,6 +74,13 @@ public class FormEmployeeActivity extends AppCompatActivity {
             setTitle("New Employee");
             employee = new Employee();
         }
+    }
+
+    private Employee createEmployee() {
+        Employee employee =  new Employee(fieldName.getText().toString(),
+                fieldAge.getText().toString(), fieldSalary.getText().toString());
+        employee.setId(this.employee.getId());
+        return employee;
     }
 
     private void setTextsEmployee() {

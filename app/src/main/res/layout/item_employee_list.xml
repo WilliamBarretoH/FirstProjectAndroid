@@ -23,6 +23,7 @@
             android:maxLines="2"
             android:textSize="27sp"
             android:textStyle="bold"
+            android:gravity="center_vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Name:" />

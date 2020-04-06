@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class Employee implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
-    private  int id = 0;
+    private Long id;
 
     private String name;
     private String age;
@@ -28,7 +28,7 @@ public class Employee implements Serializable {
 
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -44,7 +44,7 @@ public class Employee implements Serializable {
         return salary;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -60,9 +60,6 @@ public class Employee implements Serializable {
         this.salary = salary;
     }
 
-    public boolean validId(){
-        return id > 0;
-    }
 
     @NonNull
     @Override

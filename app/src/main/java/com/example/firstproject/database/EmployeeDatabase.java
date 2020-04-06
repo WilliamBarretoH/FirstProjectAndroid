@@ -16,6 +16,6 @@ public abstract class EmployeeDatabase extends RoomDatabase {
 
     public static EmployeeDatabase getInstance(Context context){
         return Room.databaseBuilder(context,
-                EmployeeDatabase.class, "employee.db").build();
+                EmployeeDatabase.class, "employee2.db").build();
     }
 }
