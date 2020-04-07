@@ -3,7 +3,11 @@ package com.example.firstproject.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -32,6 +36,7 @@ public class ListEmployeesActivity extends AppCompatActivity {
     private EmployeeDao employeeDao;
     private List<Employee> allEmployees;
     private EmployeeDaoRoom employeeDaoRoom;
+    private RecyclerView recyclerEmployees;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +48,7 @@ public class ListEmployeesActivity extends AppCompatActivity {
 
         setUpButtonNewEmployee();
         allEmployees = listingEmployees();
-        setUpRecyclerView(allEmployees);
+        setUpRecyclerView();
 
     }
 
@@ -65,19 +70,19 @@ public class ListEmployeesActivity extends AppCompatActivity {
         return employeeDao.listEmployees();
     }
 
-    private void setUpRecyclerView(List<Employee> allEmployees) {
-        RecyclerView recyclerEmployees = findViewById(R.id.list_employees_recyclerview);
+    private void setUpRecyclerView() {
 
-        setUpAdapter(allEmployees, recyclerEmployees);
-        setUpLayoutManager(recyclerEmployees);
+        setUpAdapter();
+        setUpLayoutManager();
     }
 
-    private void setUpLayoutManager(RecyclerView recyclerEmployees) {
+    private void setUpLayoutManager() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerEmployees.setLayoutManager(layoutManager);
     }
 
-    private void setUpAdapter(List<Employee> allEmployees, RecyclerView recyclerEmployees) {
+    private void setUpAdapter() {
+        recyclerEmployees = findViewById(R.id.list_employees_recyclerview);
         adapter = new ListEmployeAdapter(this, allEmployees);
         recyclerEmployees.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemClickListener() {
@@ -123,4 +128,31 @@ public class ListEmployeesActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_list_employees_search_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search_menu);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(adapter != null){
+
+                    adapter.getFilter().filter(newText);
+                }
+                return true;
+            }
+        });
+        return true;
+    }
+
+
 }
