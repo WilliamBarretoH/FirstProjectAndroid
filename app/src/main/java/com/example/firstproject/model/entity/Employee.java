@@ -1,5 +1,8 @@
 package com.example.firstproject.model.entity;
 
+import android.widget.ImageButton;
+import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -12,7 +15,6 @@ public class Employee implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
-
     private String name;
     private String age;
     private String salary;
@@ -66,4 +68,5 @@ public class Employee implements Serializable {
     public String toString() {
         return getName();
     }
+
 }

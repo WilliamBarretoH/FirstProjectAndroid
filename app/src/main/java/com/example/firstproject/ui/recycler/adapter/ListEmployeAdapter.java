@@ -1,25 +1,22 @@
 package com.example.firstproject.ui.recycler.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.firstproject.R;
 import com.example.firstproject.model.entity.Employee;
 import com.example.firstproject.ui.recycler.adapter.listener.OnItemClickListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class ListEmployeAdapter extends RecyclerView.Adapter<ListEmployeAdapter.EmployeeViewHolder> implements Filterable {
@@ -81,18 +78,55 @@ public class ListEmployeAdapter extends RecyclerView.Adapter<ListEmployeAdapter.
         notifyDataSetChanged();
     }
 
+    @Override
+    public Filter getFilter() {
+        return employeesFilter;
+    }
+
+    private Filter employeesFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            String charConstraint = constraint.toString();
+
+            if (charConstraint.isEmpty()) {
+                employees = employeesFull;
+            } else {
+
+                List<Employee> filteredList = new ArrayList<>();
+
+                for (Employee employee : employeesFull) {
+                    if (employee.getName().toLowerCase().contains(charConstraint)) {
+                        filteredList.add(employee);
+                    }
+                }
+                employees = filteredList;
+
+            }
+            FilterResults results = new FilterResults();
+            results.values = employees;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            employees = (List<Employee>) results.values;
+            notifyDataSetChanged();
+        }
+    };
+
     class EmployeeViewHolder extends RecyclerView.ViewHolder {
 
 
         private TextView name;
-
+        private ImageView picture;
         private Employee employee;
 
         public EmployeeViewHolder(@NonNull View itemView) {
             super(itemView);
 
             name = itemView.findViewById(R.id.item_name_employee);
-
+            picture = itemView.findViewById(R.id.imageView4);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -113,41 +147,4 @@ public class ListEmployeAdapter extends RecyclerView.Adapter<ListEmployeAdapter.
         }
 
     }
-
-    @Override
-    public Filter getFilter() {
-        return employeesFilter;
-    }
-
-    private Filter employeesFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-
-            String charConstraint = constraint.toString();
-
-            if(charConstraint.isEmpty()){
-                employees = employeesFull;
-            }else{
-
-                List<Employee> filteredList = new ArrayList<>();
-
-                for(Employee employee: employeesFull){
-                    if(employee.getName().toLowerCase().contains(charConstraint)){
-                        filteredList.add(employee);
-                    }
-                }
-                employees = filteredList;
-
-            }
-            FilterResults results = new FilterResults();
-            results.values = employees;
-            return  results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            employees = (List<Employee>) results.values;
-            notifyDataSetChanged();
-        }
-    };
 }

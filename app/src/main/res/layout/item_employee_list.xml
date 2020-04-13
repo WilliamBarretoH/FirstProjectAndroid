@@ -15,34 +15,45 @@
             android:id="@+id/item_name_employee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_marginStart="148dp"
-            android:layout_marginEnd="148dp"
-            android:layout_marginLeft="148dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginStart="68dp"
+            android:layout_marginLeft="68dp"
+            android:layout_marginTop="22dp"
+            android:gravity="center_horizontal"
             android:maxLines="2"
             android:textSize="27sp"
             android:textStyle="bold"
-            android:gravity="center_vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Name:" />
 
-        <TextView
-            android:id="@+id/item_age_employee"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:maxLines="6"
-            android:textSize="18sp"
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="45dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/item_name_employee"
-            app:layout_constraintTop_toBottomOf="@+id/item_name_employee"
-            app:layout_constraintVertical_bias="1.0"
-            tools:text="Age: " />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.647"
+            app:srcCompat="@drawable/ic_imageview_person_employee" />
+
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/item_age_employee"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="8dp"-->
+        <!--            android:layout_marginBottom="8dp"-->
+        <!--            android:maxLines="6"-->
+        <!--            android:textSize="18sp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.0"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/item_name_employee"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/item_name_employee"-->
+        <!--            app:layout_constraintVertical_bias="1.0"-->
+        <!--            tools:text="Age: " />-->
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

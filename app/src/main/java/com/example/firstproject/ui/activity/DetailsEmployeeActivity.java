@@ -121,7 +121,7 @@ public class DetailsEmployeeActivity extends AppCompatActivity {
     private void verifyRemoveEmployee(final int position, final Employee employee) {
         new AlertDialog.Builder(this)
                 .setTitle("Deleting employee")
-                .setMessage("Confirm remove of " + employee.getName())
+                .setMessage("Confirm remove of " + employee.getName()+ "?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
